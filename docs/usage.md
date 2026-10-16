@@ -151,7 +151,7 @@
 
 </details>
 
-问答、选择、填空和遮挡示例来自 [sing-box 例外分流](https://github.com/zzpice/sing-box-rules)、[sing-box 广告过滤](https://github.com/zzpice/sing-box-adblock)、[RouterOS Adlist](https://github.com/zzpice/routeros-adlist)、[图片资源库](https://github.com/zzpice/assets)、[Zashboard 界面设置](https://github.com/zzpice/zashboard-config) 和 [基金再平衡](https://github.com/zzpice/fund-rebalance) 的公开说明。思维导图使用通用格式示例。安装包、在线预览和本页截图使用同一批示例；截图展示某一次卡片状态，选择题的随机顺序可能不同。
+问答、选择和遮挡示例来自 [sing-box 例外分流](https://github.com/zzpice/sing-box-rules)、[sing-box 广告过滤](https://github.com/zzpice/sing-box-adblock)、[RouterOS Adlist](https://github.com/zzpice/routeros-adlist)、[图片资源库](https://github.com/zzpice/assets)、[Zashboard 界面设置](https://github.com/zzpice/zashboard-config) 的公开说明。填空使用本项目的通用资金守恒示例。思维导图使用通用格式示例。安装包、在线预览和本页截图使用同一批示例；截图展示某一次卡片状态，选择题的随机顺序可能不同。
 
 ## 在 Anki 导出与备份
 
