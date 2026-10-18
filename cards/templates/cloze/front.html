@@ -1,8 +1,9 @@
 <article class="review-sheet" data-review="cloze">
-  <header class="review-context">
-    {{#章节}}<span>{{章节}}</span>{{/章节}}
-    <span>填空</span>
+  <header class="review-header">
+    <span class="review-kind">填空</span>
+    <div class="review-context">{{#章节}}{{章节}}{{/章节}}</div>
   </header>
+  <span data-review-tags hidden>{{Tags}}</span>
   <div class="review-question content">{{cloze:正文}}</div>
 </article>
 <script src="_review.js"></script>

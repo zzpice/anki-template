@@ -37,9 +37,12 @@ jobs:
           python -m pip install --no-deps "aqt==${{ matrix.anki-version }}"
           npm install --no-save --package-lock=false playwright@1.62.1
           npx playwright install --with-deps chromium webkit
-      - name: Verify download, preview and native Anki import
+      - name: Build review fixture without replacing the public download
+        run: python scripts/build_package.py --output build/review.apkg
+      - name: Verify sources, preview and native Anki import
         env:
           ANKI_RENDER_OUTPUT: build/cards.json
+          ANKI_TEST_PACKAGE: build/review.apkg
         run: python -m unittest discover -s tests -v
       - name: Check shared authoring data
         if: matrix.anki-version == '25.9.2'

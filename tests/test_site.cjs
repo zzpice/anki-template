@@ -78,7 +78,7 @@ async function checkAppearance(browser, base) {
   const order = await frame.locator('.review-choice').evaluateAll(rows=>rows.map(row=>row.dataset.key));
   await tab.emulateMedia({colorScheme:'dark'}); await tab.selectOption('#theme','light');
   await expectTheme(page,'light','light'); await expectTheme(tab,'light','light');
-  assert.equal(await frame.locator('body').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(250, 249, 246)');
+  assert.equal(await frame.locator('body').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(250, 249, 245)');
   assert.deepEqual(await frame.locator('.review-choice').evaluateAll(rows=>rows.map(row=>row.dataset.key)),order);
   assert.equal(await frame.locator('input:checked').count(),1);
   await tab.selectOption('#theme','system'); await expectTheme(tab,'system','dark');

@@ -1,8 +1,8 @@
 <article class="review-sheet" data-review="occlusion">
-  <header class="review-context"><span>图片遮挡</span></header>
+  <header class="review-header"><span class="review-kind">图片遮挡</span><span class="review-context">回忆图中标记的区域</span></header>
   {{#Header}}<div class="review-question content">{{Header}}</div>{{/Header}}
   <div hidden>{{cloze:Occlusion}}</div>
-  <p id="occlusion-error" role="status" hidden></p>
+  <p id="occlusion-error" role="status">正在准备图片遮挡…</p>
   <div id="image-occlusion-container">
     {{Image}}
     <canvas id="image-occlusion-canvas"></canvas>

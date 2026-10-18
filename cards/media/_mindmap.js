@@ -144,17 +144,18 @@
   tools.innerHTML = '<div class="mm-actions">' +
     '<button type="button" data-mm-action="locate">定位本卡</button>' +
     '<button type="button" data-mm-action="next">下一处挖空</button>' +
+    '<details class="mm-more"><summary>结构与答案</summary><div class="mm-batch">' +
     '<button type="button" data-mm-action="expand">全部展开</button>' +
     '<button type="button" data-mm-action="collapse">全部折叠</button>' +
     '<button type="button" data-mm-action="show">显示全部答案</button>' +
-    '<button type="button" data-mm-action="hide">隐藏全部答案</button></div>' +
+    '<button type="button" data-mm-action="hide">隐藏全部答案</button></div></details></div>' +
     '<form class="mm-search" role="search"><input type="search" aria-label="搜索导图" placeholder="搜索导图" autocomplete="off">' +
-    '<button type="submit">搜索</button>' +
+    '<button type="submit">搜索</button><div class="mm-results">' +
     '<button type="button" data-mm-action="prev-result" aria-label="上一搜索结果">↑</button>' +
     '<span class="mm-search-status" role="status" aria-live="polite">0/0</span>' +
     '<button type="button" data-mm-action="next-result" aria-label="下一搜索结果">↓</button>' +
-    '<button type="button" data-mm-action="clear">清除</button></form>' +
-    '<p class="mm-help">本卡挖空有下划线；搜索包含隐藏答案，跳转不会揭示。</p>';
+    '<button type="button" data-mm-action="clear">清除</button></div></form>' +
+    '<p class="mm-help">下划线标记本卡挖空 · 搜索不会揭示答案</p>';
   tools.hidden = false;
   var input = tools.querySelector('input');
   var status = tools.querySelector('[role="status"]');
@@ -257,6 +258,11 @@
     resultStatus();
   }
 
+  // Local listeners disappear with the current card. Never consume rating keys
+  // unless a tree control has focus.
+  sheet.addEventListener('keydown', function (event) {
+    if (event.target.closest('button, input, summary')) event.stopPropagation();
+  });
   sheet.addEventListener('submit', function (event) {
     if (!event.target.classList.contains('mm-search')) return;
     event.preventDefault(); event.stopPropagation();

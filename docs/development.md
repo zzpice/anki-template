@@ -1,5 +1,7 @@
 # Anki 模板维护说明
 
+> `refactor/card-templates` 分支暂不更新或发布正式安装包。请按 [重构验收说明](card-refactor.md#复现检查) 使用 `--output build/review.apkg` 生成临时包，并设置 `ANKI_TEST_PACKAGE` 后测试。下文正式发布流程只在验收后适用。
+
 [项目首页](https://zzpice.github.io/anki-template/) 提供使用入口；项目概览见 [README](../README.md)，日常安装与字段教学见 [Anki 使用说明](usage.md)，网页制卡与数据交换见 [网页制卡说明](authoring.md)，提交约定见 [AGENTS](../AGENTS.md)。本页说明源码、生成、验证与发布。
 
 ## 仓库结构

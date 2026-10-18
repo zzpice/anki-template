@@ -3,7 +3,16 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 
 module.exports = async function checkMindMap(page, showCard, cases, engine) {
-  const action = name => page.locator('[data-mm-action="' + name + '"]');
+  const action = name => {
+    const locator = page.locator('[data-mm-action="' + name + '"]');
+    return {isDisabled:() => locator.isDisabled(), click:async () => {
+      if (['expand', 'collapse', 'show', 'hide'].includes(name)) {
+        const panel = page.locator('.mm-more');
+        if (!(await panel.evaluate(el => el.open))) await panel.locator('summary').click();
+      }
+      await locator.click();
+    }};
+  };
   const search = async text => {
     await page.getByRole('searchbox').fill(text);
     await page.getByRole('button', {name:'搜索', exact:true}).click();
@@ -276,6 +285,7 @@ module.exports = async function checkMindMap(page, showCard, cases, engine) {
     const preview = JSON.parse(require('node:fs').readFileSync(path.join(__dirname, '../web/preview-cards.json'), 'utf8'));
     await showCard(page, preview.find(e => e.type === 'mindmap').cards[0].front);
     await action('expand').click();
+    await page.locator('.mm-more summary').click();
     await page.locator('.mm-sheet').screenshot({path:path.join(__dirname, '../docs/images/preview-mindmap.png')});
   }
 };

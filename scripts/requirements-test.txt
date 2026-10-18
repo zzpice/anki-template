@@ -1,3 +1,3 @@
 # 在安装 requirements-build.txt 后，以 --no-deps 安装。
 # 只读取官方 reviewer 的 JS/CSS 资源，测试不需要 Qt 或 GUI 依赖。
-aqt==25.9.2
+aqt==26.9.3

@@ -16,6 +16,9 @@ from anki.import_export_pb2 import ImportAnkiPackageRequest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import build_package as package
 
+TEST_PACKAGE = Path(os.environ.get("ANKI_TEST_PACKAGE", package.OUTPUT)).resolve()
+TEST_PREVIEW = Path(os.environ.get("ANKI_TEST_PREVIEW", package.PREVIEW)).resolve()
+
 
 class PackageTests(unittest.TestCase):
     def setUp(self):
@@ -23,7 +26,7 @@ class PackageTests(unittest.TestCase):
         self.addCleanup(temporary.cleanup)
         self.directory = Path(temporary.name)
 
-    def collection(self, name="collection", source=package.OUTPUT):
+    def collection(self, name="collection", source=TEST_PACKAGE):
         collection = Collection(str(self.directory / (name + ".anki2")))
         self.addCleanup(collection.close)
         self.import_into(collection, source)
@@ -36,7 +39,7 @@ class PackageTests(unittest.TestCase):
 
     def check_collection(self, collection):
         self.assertEqual(collection.note_count(), len(package.samples()))
-        preview = json.loads((package.ROOT / "web/preview-cards.json").read_text())
+        preview = json.loads(TEST_PREVIEW.read_text())
         self.assertEqual(len(collection.find_cards("")), sum(len(example["cards"]) for example in preview))
         self.assertEqual([s["name"] for s in package.specifications()], ["问答", "选择", "填空", "图片遮挡", "思维导图"])
         self.assertIsNotNone(collection.decks.id_for_name(package.DECK_NAME))
@@ -73,7 +76,7 @@ class PackageTests(unittest.TestCase):
                 self.assertNotIn("{{FrontSide}}", card.answer())
                 self.assertEqual((card.type, card.queue, card.reps), (0, 0, 0))
         data = package.preview_data(collection)
-        self.assertEqual(data, json.loads(package.PREVIEW.read_text()))
+        self.assertEqual(data, json.loads(TEST_PREVIEW.read_text()))
         return data
 
     def test_download_import_and_preview(self):
@@ -139,7 +142,7 @@ class PackageTests(unittest.TestCase):
             card.ivl, card.reps, card.due = 23 + index, 7, 100 + index
             collection.update_card(card)
             schedules[cid] = (2, 2, 23 + index, 7, 100 + index)
-        self.import_into(collection, package.OUTPUT)
+        self.import_into(collection, TEST_PACKAGE)
         rebuilt = package.build_package(self.directory / "rebuilt.apkg", preview=None)
         self.import_into(collection, rebuilt)
         self.assertEqual(collection.note_count(), 9)

@@ -6,11 +6,14 @@ const path = require('node:path');
 const {chromium, webkit} = require('playwright');
 
 const root = path.resolve(__dirname, '..');
-const examples = JSON.parse(fs.readFileSync(path.join(root, 'build/cards.json'), 'utf8'));
-const choiceCases = JSON.parse(fs.readFileSync(path.join(root, 'build/choice-cases.json'), 'utf8'));
-const mindmapCases = JSON.parse(fs.readFileSync(path.join(root, 'build/mindmap-cases.json'), 'utf8'));
+const renderRoot = path.resolve(root, process.env.ANKI_RENDER_DIR || 'build');
+const examples = JSON.parse(fs.readFileSync(path.join(renderRoot, 'cards.json'), 'utf8'));
+const choiceCases = JSON.parse(fs.readFileSync(path.join(renderRoot, 'choice-cases.json'), 'utf8'));
+const mindmapCases = JSON.parse(fs.readFileSync(path.join(renderRoot, 'mindmap-cases.json'), 'utf8'));
 const checkMindMap = require('./mindmap_browser.cjs');
-const nativeRoot = JSON.parse(fs.readFileSync(path.join(root, 'build/anki-web.json'), 'utf8'));
+const checkReview = require('./review_browser.cjs');
+const reviewCases = JSON.parse(fs.readFileSync(path.join(renderRoot, 'review-cases.json'), 'utf8'));
+const nativeRoot = JSON.parse(fs.readFileSync(path.join(renderRoot, 'anki-web.json'), 'utf8'));
 const cards = Object.fromEntries(examples.map(example => [example.key, example.cards]));
 const server = http.createServer((request, response) => {
   const url = decodeURIComponent(request.url.split('?')[0]);
@@ -217,6 +220,7 @@ async function run(browserType, name, base) {
     await page.setViewportSize({width:390,height:844});
     await page.emulateMedia({colorScheme:'light'});
     await checkChoices(page);
+    await checkReview(page, showCard, reviewCases);
     await checkMindMap(page, showCard, mindmapCases, name);
     await page.setViewportSize({width:390,height:844});
     await page.emulateMedia({colorScheme:'light'});
@@ -267,7 +271,8 @@ async function run(browserType, name, base) {
     const light = await page.locator('body').evaluate(el => getComputedStyle(el).color);
     for (const night of ['nightMode', 'night_mode']) {
       await page.locator('body').evaluate((el, value) => el.classList.add(value), night);
-      assert.notEqual(await page.locator('body').evaluate(el => getComputedStyle(el).color), light);
+      assert.equal(await page.locator('body').evaluate(el => getComputedStyle(el).color), 'rgb(237, 238, 238)');
+      assert.equal(await page.locator('body').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(21, 22, 23)');
       await page.locator('body').evaluate((el, value) => el.classList.remove(value), night);
     }
     const image = page.locator('.review-question img');
@@ -279,7 +284,7 @@ async function run(browserType, name, base) {
     await page.locator('dialog').waitFor({state:'detached'});
     assert.equal(await page.locator('dialog').count(), 0);
     await image.click();
-    await page.locator('dialog button').click();
+    await page.getByRole('button', {name:'关闭', exact:true}).click();
     await page.locator('dialog').waitFor({state:'detached'});
     assert.equal(await page.locator('dialog').count(), 0);
     await image.click();
@@ -429,7 +434,7 @@ async function run(browserType, name, base) {
     const zoom = await frame.locator('dialog').boundingBox();
     const viewportBox = await page.locator('#preview').boundingBox();
     assert.ok(zoom.x >= viewportBox.x && zoom.x + zoom.width <= viewportBox.x + viewportBox.width);
-    await frame.locator('dialog button').click();
+    await frame.getByRole('button', {name:'关闭', exact:true}).click();
     await frame.locator('dialog').waitFor({state:'detached'});
     assert.equal((await page.request.get(base + '/downloads/anki-template.apkg')).status(), 200);
     await page.goto(base + '/index.html');

@@ -1,6 +1,9 @@
 {{#问题}}
 <article class="review-sheet" data-review="basic">
-  {{#章节}}<header class="review-context"><span>{{章节}}</span></header>{{/章节}}
+  <header class="review-header">
+    <span class="review-kind">问答</span>
+    <div class="review-context">{{#章节}}{{章节}}{{/章节}}</div>
+  </header>
   <div class="review-question content">{{问题}}</div>
 </article>
 <script src="_review.js"></script>

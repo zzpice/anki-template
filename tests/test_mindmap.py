@@ -162,8 +162,10 @@ class MindMapTests(unittest.TestCase):
                 for side in ("front", "back"):
                     self.assertNotIn('_mindmap', package.read_source(spec[side]))
         script = package.read_source('media/_mindmap.js')
-        for token in ('fetch(', 'XMLHttpRequest', 'MutationObserver', 'localStorage', 'console.', 'keydown'):
+        for token in ('fetch(', 'XMLHttpRequest', 'MutationObserver', 'localStorage', 'console.'):
             self.assertNotIn(token, script)
+        self.assertNotIn("document.addEventListener", script)
+        self.assertNotIn("window.addEventListener", script)
 
 
 if __name__ == "__main__":
