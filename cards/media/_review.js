@@ -206,7 +206,8 @@ SOFTWARE.
       answer.innerHTML = el.getAttribute('data-cloze'); answer.hidden = true;
       var button = document.createElement('button'); button.type = 'button'; button.className = 'review-cloze-toggle';
       button.appendChild(hint); button.appendChild(answer);
-      button.setAttribute('aria-label', '揭示或隐藏这一处填空'); button.setAttribute('aria-expanded', 'false');
+      // Let the visible hint / rich answer name the button for screen readers.
+      button.title = '揭示或隐藏这一处填空'; button.setAttribute('aria-expanded', 'false');
       el.textContent = ''; el.appendChild(button);
       button.addEventListener('click', function () {
         var reveal = button.getAttribute('aria-expanded') !== 'true';

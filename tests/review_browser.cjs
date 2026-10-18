@@ -41,6 +41,8 @@ module.exports = async function checkReview(page, showCard, cases) {
   assert.equal(await toggles.first().getAttribute('aria-expanded'), 'true');
   assert.equal(await toggles.nth(1).getAttribute('aria-expanded'), 'false');
   assert.match(await toggles.first().innerText(), /甲 & A/);
+  assert.equal(await page.getByRole('button', {name:'甲 & A', exact:true}).count(), 1,
+    'screen readers can read the revealed rich answer');
   await toggles.first().click();
   assert.equal(await toggles.first().getAttribute('aria-expanded'), 'false');
   await toggles.nth(1).click();
